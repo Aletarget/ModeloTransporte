@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modelo de Transporte Animado + Sensibilidad</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h2>Modelo de Transporte — Animación y Análisis de Sensibilidad</h2>
+
+<div class="controls">
+    <div class="box">
+        <div><label>Filas:</label><input id="rows" type="number" value="3" min="1"></div>
+        <div><label>Columnas:</label><input id="cols" type="number" value="3" min="1"></div>
+        <div style="margin-top:8px;"><button class="btn" onclick="generarTabla()">Generar Tabla</button></div>
+        <div class="notice">Rellena costos, oferta y demanda. Si la suma de oferta ≠ demanda, la asignación puede quedar incompleta.</div>
+    </div>
+
+    <div class="box" style="min-width:260px;">
+        <div><strong>Acciones:</strong></div>
+        <div style="margin-top:8px;">
+            <button class="btn small" onclick="resolver()">Resolver con Animación</button>
+            <button class="btn small" onclick="dibujarActual()">Redibujar (sin anim.)</button>
+        </div>
+        <div class="notice">Usa "Resolver" para recalcular y animar la Esquina Noroeste.</div>
+        <label><b>Método de Transporte:</b></label>
+        <select id="metodo">
+            <option value="noroeste">Esquina Noroeste</option>
+            <option value="minimo">Costo Mínimo</option>
+            <option value="vogel">Vogel (VAM)</option>
+        </select>
+    </div>
+
+    <div class="box" style="min-width:320px;">
+        <div><strong>Sensibilidad — costos</strong></div>
+        <div style="margin-top:8px;">
+            <label>Seleccione celda (i, j)</label>
+            <div class="flex-row">
+                <input id="sens_i" type="number" min="1" value="1" style="width:60px">
+                <input id="sens_j" type="number" min="1" value="1" style="width:60px">
+                <span style="font-size:13px;color:#666;">(fila, columna)</span>
+            </div>
+            <label>Nuevo costo</label>
+            <input id="sens_newcost" type="number" value="1" style="width:120px">
+            <div style="margin-top:8px;">
+                <button class="btn small" onclick="simularCambioCosto()">Simular (asignación fija)</button>
+                <button class="btn small" onclick="aplicarCambioYCorrer()">Aplicar + Recalcular</button>
+            </div>
+            <div id="sens_output" class="notice"></div>
+        </div>
+    </div>
+
+    <div class="box" style="min-width:320px;">
+        <div><strong>Sensibilidad — oferta / demanda</strong></div>
+        <div style="margin-top:8px;">
+            <label>Modificar oferta (fila i):</label>
+            <div class="flex-row">
+                <input id="sens_of_i" type="number" min="1" value="1" style="width:60px">
+                <input id="sens_of_val" type="number" value="0" style="width:100px">
+                <button class="btn small" onclick="simularCambioOferta()">Simular (recalcular)</button>
+            </div>
+            <label style="margin-top:6px;">Modificar demanda (columna j):</label>
+            <div class="flex-row">
+                <input id="sens_de_j" type="number" min="1" value="1" style="width:60px">
+                <input id="sens_de_val" type="number" value="0" style="width:100px">
+                <button class="btn small" onclick="simularCambioDemanda()">Simular (recalcular)</button>
+            </div>
+            <div id="sens_supply_output" class="notice"></div>
+        </div>
+    </div>
+</div>
+
+<div id="tabla-container" style="margin-top:14px;"></div>
+
+<canvas id="graph" width="1000" height="450"></canvas>
+
+<h3>Matriz Solución:</h3>
+<div id="solucion"></div>
+
+<div class="box" style="margin-top:12px;">
+    <div id="totalCostLine" class="result-line">Costo total: —</div>
+    <div class="notice" id="explain">Nota: "Simular (asignación fija)" aplica el cambio manteniendo las cantidades asignadas; "Aplicar + Recalcular" modifica los datos y vuelve a ejecutar Esquina Noroeste.</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
